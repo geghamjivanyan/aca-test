@@ -11,6 +11,7 @@ class Atom:
     ATOMS = {'O': 'Oxygen', 'H': 'Hydrogen', 'N': 'Nytrogen', 'P': 'Phosphorius', 'C': 'Carbon'}
 
     def __init__(self, name):
+        self.__is_valid = False
         try:
             if name not in self.ATOMS:
                 raise UnknownAtomError(name)
@@ -18,10 +19,18 @@ class Atom:
             print(err.get_info())
         else:
             self.__name = name
+            self.__is_valid = True
+
+    @property
+    def is_valid(self):
+        return self.__is_valid
 
     @property
     def name(self):
-        return self.__name
+        try:
+            return self.__name
+        except AttributeError:
+            return False
 
     @name.setter
     def name(self, x):
@@ -43,12 +52,20 @@ class Atom:
 class Molecul:
 
     def __init__(self, a):
-        self.__atoms = a
-        
+        self.__atoms = self.__check_atoms(a)
+     
+    def __check_atoms(self, l):
+        v = []
+        for x in l:
+            if x.is_valid:
+                v.append(x)
+        return v
+
     @property
     def atoms(self):
         return self.__atoms
     
+
     @atoms.setter
     def atoms(self, a):
         self.__atoms = a
@@ -71,8 +88,8 @@ a2 = Atom('O')
 a3 = Atom('C')
 a4 = Atom('N')
 a5 = Atom('P')
-
-m = Molecul([a1, a3, a1, a2, a4, a1, a2, a5])
-m1 = a1 + a4 
-print(a1 + a2 + a3)
+a6 = Atom('K')
+m = Molecul([a1, a3, a1, a2, a4, a1, a2, a5, a6])
+#m1 = a1 + a4 
+#print(a1 + a2 + a3)
 
